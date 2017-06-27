@@ -127,7 +127,20 @@ int main() {
 
           Eigen::VectorXd state(6);
           state << 0, 0, 0, v, cte, epsi;
+
+          // Predicting 100 ms in the future.
+          double latency = 0.1;
+          const double Lf = 2.67;
+          state[0] = v*cos(0)*latency;
+          state[1] = v*sin(0)*latency;
+          state[2] = (-v*steer_value*latency/Lf);
+          state[3] = v + throttle_value*latency;
+          state[4] = cte + v*sin(epsi)*latency;
+          state[5] = epsi - (v/Lf)*steer_value*latency;
+
           auto vars = mpc.Solve(state, coeffs);
+
+          //auto vars = mpc.Solve(state, coeffs);
 
           steer_value = vars[0];
           throttle_value = vars[1];
