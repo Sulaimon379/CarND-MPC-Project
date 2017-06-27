@@ -1,49 +1,47 @@
 # CarND-Controls-MPC
 Self-Driving Car Engineer Nanodegree Program
 
-# Model Description. This includes the state, actuators and update equations.
+## Model Description. This includes the state, actuators and update equations.
 
 The Model used in the project is a simple Kinematic Model consisting of Vehicle states and Actuators. Vehicle State can be represented as a vector [x,y,ψ,v,cte,eψ]. Actuators are set of controls used to navigate and accelerate/deccelerate the vehicle.
 
-# State: 
-x: the x-position
-y: the y-position 
-ψ: the vehicle orientation
-v: the velocity
-cte: the cross trak error
-eψ : the the vehicle orientation error
+* State: 
+* x: the x-position
+* y: the y-position 
+* ψ: the vehicle orientation
+* v: the velocity
+* cte: the cross trak error
+* eψ : the the vehicle orientation error
 
-# Actuators:
-δ (the steering angle) and
-a (acceleration, i.e. throttle and brake pedals)
+* Actuators:
+* δ (the steering angle) 
+* a (acceleration, i.e. throttle and brake pedals)
 
-# Update Equations:
-x = x + v*cos(ψ)* dt
-y = y + v sin(psi) dt
-v = v+a*dt * a in [-1,1]
-ψ = ψ+(v/L_f)*δ*dt
+* Update Equations:
+* x = x + v*cos(ψ)* dt
+* y = y + v sin(psi) dt
+* v = v+a*dt * a in [-1,1]
+* ψ = ψ+(v/L_f)*δ*dt
 
 
-# The reasoning behind the chosen N and dt values:
+## The reasoning behind the chosen N and dt values:
 
 I tried different combinations of N (timestep length) and dt (elapsed duration between timesteps) values. I started with both N = 1 and dt values = 1. I observed that the vehicle did not move, I alternated increasing and decreasing N and dt and observed vehicle's behaviour was erratic, swerving around the track and driving off the track at higher dt. I tried increasing the N to 5 and oberved the vehicle was a little bit stable. I  also tried reducing dt to 0.5 while N = 5 and observed that the vehicle still drove off the track. After multiple trial and error, I observed that higher values of N greater than 5 combined with lower values dt less than 0.5 smoothen the performance. My final values were N=10 and dt=0.1 
 
 
-# Handling Latency
+## Handling Latency
 Inorder to handle a 100 millisecond latency, I predicted the states (x,y,v,phi) 100ms into the future as follows:
 
-double latency = 0.1;
-const double Lf = 2.67;
-state[0] = v*cos(0)*latency;
-state[1] = v*sin(0)*latency;
-state[2] = (-v*steer_value*latency/Lf);
-state[3] = v + throttle_value*latency;
-state[4] = cte + v*sin(epsi)*latency;
-state[5] = epsi - (v/Lf)*steer_value*latency;
+* double latency = 0.1;
+* const double Lf = 2.67;
+* state[0] = v*cos(0)*latency;
+* state[1] = v*sin(0)*latency;
+* state[2] = (-v*steer_value*latency/Lf);
+* state[3] = v + throttle_value*latency;
+* state[4] = cte + v*sin(epsi)*latency;
+* state[5] = epsi - (v/Lf)*steer_value*latency;
 
-auto vars = mpc.Solve(state, coeffs);
-
-
+* auto vars = mpc.Solve(state, coeffs);
 
 
 ---
